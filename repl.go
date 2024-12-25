@@ -4,14 +4,15 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"pokedexcli/internal/pokeapi"
 	"strings"
+
+	"github.com/SauravNaruka/pokedexcli/internal/pokeapi"
 )
 
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(cfg *config) error
+	callback    func(cfg *config, args ...string) error
 }
 
 type config struct {
@@ -32,6 +33,10 @@ func startRepl(cfg *config) {
 			continue
 		}
 		commandName := words[0]
+		args := []string{}
+		if len(words) > 1 {
+			args = words[1:]
+		}
 
 		cmd, ok := getCommands()[commandName]
 		if !ok {
@@ -39,7 +44,7 @@ func startRepl(cfg *config) {
 			continue
 		}
 
-		err := cmd.callback(cfg)
+		err := cmd.callback(cfg, args...)
 		if err != nil {
 			fmt.Println(err)
 			continue
@@ -69,6 +74,11 @@ func getCommands() map[string]cliCommand {
 			name:        "mapb",
 			description: "Get the previous page of locations",
 			callback:    commandMapb,
+		},
+		"explore": {
+			name:        "explore <location_name>",
+			description: "Explore a location",
+			callback:    commandExplore,
 		},
 		"exit": {
 			name:        "exit",

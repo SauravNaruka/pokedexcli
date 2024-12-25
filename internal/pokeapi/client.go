@@ -2,8 +2,9 @@ package pokeapi
 
 import (
 	"net/http"
-	"pokedexcli/internal/pokecache"
 	"time"
+
+	"github.com/SauravNaruka/pokedexcli/internal/pokecache"
 )
 
 type Client struct {
